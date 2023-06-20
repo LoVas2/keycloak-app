@@ -23,7 +23,12 @@ const initKeycloak = (onAuthenticatedCallback) => {
 
 };
 
-const doLogin = _kc.login;
+const keycloakLoginOptions = {
+  scope: 'read:licence offline_access'
+  // scope: 'read:licence'
+}
+
+const doLogin = () => _kc.login(keycloakLoginOptions);;
 
 const doLogout = _kc.logout;
 
@@ -31,14 +36,18 @@ const doRegister = _kc.register;
 
 const getToken = () => _kc.token;
 
+const getRefreshToken = () => _kc.refreshToken;
+
 const isLoggedIn = () => !!_kc.token;
 
 const updateToken = (successCallback) =>
-  _kc.updateToken(5)
+  _kc.updateToken(500000000000000000)
     .then(successCallback)
     .catch(doLogin);
 
 const getUsername = () => _kc.tokenParsed?.preferred_username;
+const getName = () => _kc.tokenParsed?.name;
+const getExp = () => _kc.tokenParsed?.exp;
 
 const hasRole = (roles) => roles.some((role) => _kc.hasRealmRole(role));
 
@@ -127,8 +136,11 @@ const UserService = {
   doRegister,
   isLoggedIn,
   getToken,
+  getRefreshToken,
   updateToken,
   getUsername,
+  getName,
+  getExp,
   hasRole,
   exchange,
   impersonate,
